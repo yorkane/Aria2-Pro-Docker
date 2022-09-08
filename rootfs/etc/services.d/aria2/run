@@ -14,5 +14,7 @@
 
 umask ${UMASK_SET:-022}
 
+nginx
+
 exec s6-setuidgid p3terx aria2c \
     --conf-path=/config/aria2.conf
