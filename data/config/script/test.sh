@@ -21,21 +21,6 @@ CHECK_RPC_CONECTION() {
     (curl "${RPC_ADDRESS}" -fsSd "${RPC_PAYLOAD}" || curl "https://${RPC_ADDRESS}" -kfsSd "${RPC_PAYLOAD}") >/dev/null
 }
 
-
-curl "http://127.0.0.1:680/jsonrpc" -X POST -d '{"id": "CurlA", "method": "aria2.addUri", "params": ["token:Aria_315", ["https://jinja.wtvdev.com/t1.j2/?type=js"],
-      {
-        "out": "jinja8.txt",
-        "dir": "/downloads/TME1",
-        "max-download-limit": "10M",
-        "min-split-size": "20M",
-        "split": 5,
-        "timeout": 10,
-        "max-connection-per-server": 10
-      }
-    ]
-}'
-
-
 CHECK_CORE_FILE "$@"
 CHECK_PARAMETER "$@"
 CHECK_FILE_NUM

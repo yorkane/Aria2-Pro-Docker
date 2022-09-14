@@ -24,9 +24,9 @@ CHECK_RPC_CONECTION() {
 ERROR_ON_STOP() {
     if [[ "${TASK_STATUS}" = "error" ]] || [[ "${TASK_STATUS}" = "removed" ]]; then
         if [[ "${RMQ_KEY}" && "${RMQ_SECRET}"]]; then
-          curl 127.0.0.1/_rocketmq/ -X POST -d '{"accessKey": '"$RMQ_KEY"', "secretKey": '"$RMQ_SECRET"', "nameservers": "'$RMQ_NAMESERVERS'", "topic": "'$RMQ_TOPIC'", "group": "'$RMG_GROUP'", "message": '$RPC_RESULT'}'
+          curl 127.0.0.1/_rocketmq/ -X POST -d '{"accessKey": '"$RMQ_KEY"', "secretKey": '"$RMQ_SECRET"', "nameservers": "'$RMQ_NAMESERVERS'", "topic": "'$RMQ_TOPIC'", "group": "'$RMQ_GROUP'", "message": '$RPC_RESULT'}'
         else
-          curl 127.0.0.1/_rocketmq/ -X POST -d '{"nameservers": "'$RMQ_NAMESERVERS'", "topic": "'$RMQ_TOPIC'", "group": "'$RMG_GROUP'", "message": '$RPC_RESULT'}'
+          curl 127.0.0.1/_rocketmq/ -X POST -d '{"nameservers": "'$RMQ_NAMESERVERS'", "topic": "'$RMQ_TOPIC'", "group": "'$RMQ_GROUP'", "message": '$RPC_RESULT'}'
         fi
     fi
 }
