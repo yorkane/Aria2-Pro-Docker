@@ -22,12 +22,19 @@ CHECK_RPC_CONECTION() {
 }
 
 ERROR_ON_STOP() {
-    if [[ "${TASK_STATUS}" = "error" ]] || [[ "${TASK_STATUS}" = "removed" ]]; then
-        if [[ "${RMQ_KEY}" && "${RMQ_SECRET}"]]; then
-          curl 127.0.0.1/_rocketmq/ -X POST -d '{"accessKey": '"$RMQ_KEY"', "secretKey": '"$RMQ_SECRET"', "nameservers": "'$RMQ_NAMESERVERS'", "topic": "'$RMQ_TOPIC'", "group": "'$RMQ_GROUP'", "message": '$RPC_RESULT'}'
-        else
-          curl 127.0.0.1/_rocketmq/ -X POST -d '{"nameservers": "'$RMQ_NAMESERVERS'", "topic": "'$RMQ_TOPIC'", "group": "'$RMQ_GROUP'", "message": '$RPC_RESULT'}'
-        fi
+
+    if [ "${TASK_STATUS}" == "error" ] || [ "${TASK_STATUS}" == "removed" ] || [ "${TASK_STATUS}" == "aborted" ]; then
+      #echo "${TASK_STATUS} ------------------- ${RPC_RESULT} =============="
+	        if [[ -z "${RMQ_KEY}" ]]; then
+	          curl 127.0.0.1:680/_rocketmq/ -X POST -d '{"nameservers": "'$RMQ_NAMESERVERS'", "topic": "'$RMQ_TOPIC'", "group": "'$RMQ_GROUP'", "message": '$RPC_RESULT'}'
+          else
+#            echo " curl '127.0.0.1:680/_rocketmq/' -X POST -d '${RPC_RESULT}'"
+#            curl '127.0.0.1:680/_rocketmq/' -X POST -d ''${RPC_RESULT}''
+            sct='curl "http://127.0.0.1:680/_rocketmq/" -X POST -d '"'"'{"accessKey": "'$RMQ_KEY'", "secretKey": "'$RMQ_SECRET'", "nameservers": "'$RMQ_NAMESERVERS'", "topic": "'$RMQ_TOPIC'", "group": "'$RMQ_GROUP'", "message": '$RPC_RESULT}"'"
+            echo $sct > /data/logs/e1.sh;
+            bash /data/logs/e1.sh;
+#            curl 127.0.0.1:680/_rocketmq/ -X POST -d '{"accessKey": "'$RMQ_KEY'", "secretKey": "'$RMQ_SECRET'", "nameservers": "'$RMQ_NAMESERVERS'", "topic": "'$RMQ_TOPIC'", "group": "'$RMQ_GROUP'", "message": '$RPC_RESULT'}'
+          fi
     fi
 }
 
@@ -39,5 +46,6 @@ CHECK_PARAMETER "$@"
 CHECK_FILE_NUM
 CHECK_SCRIPT_CONF
 GET_TASK_INFO
+GET_TASK_STATUS
 ERROR_ON_STOP
 exit 0

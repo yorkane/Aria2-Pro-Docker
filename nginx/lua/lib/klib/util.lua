@@ -5,7 +5,7 @@ local ins, tonumber, fmod, tostring = table.insert, tonumber, math.fmod, tostrin
 local nvar, concat, nctx, nreq, nphase, hash = ngx.var, table.concat, ngx.ctx, ngx.req, ngx.get_phase, table.hash
 local now, update_time, time = ngx.now, ngx.update_time, ngx.time
 local nfind, nsub = ngx.re.find, ngx.re.gsub
-local nmatch, gmatch, byte, char = ngx.re.match, ngx.re.gmatch, string.byte, string.char
+local nmatch, gmatch, byte, char, sreverse = ngx.re.match, ngx.re.gmatch, string.byte, string.char, string.reverse
 local find, sub, lower, rep = string.find, string.sub, string.lower, string.rep
 local random, randomseed, floor = math.random, math.randomseed, math.floor
 local wid = ngx.worker.id() or 0
@@ -573,6 +573,27 @@ function _M.decamelize(str, separator)
 		end
 	end
 	return res
+end
+
+function _M.find_last(str, to_find)
+	if str == nil or to_find == nil then
+		return nil, nil
+	end
+	if #to_find == 1 then
+		local b1 = byte(to_find, 1, 1)
+		for i = #str, -1 do
+			if byte(str, i) == b1 then
+				return i
+			end
+		end
+	end
+	local str_reverse, substr_reverse = sreverse(str), sreverse(to_find)
+	local from, to = find(str_reverse, substr_reverse, 1, true)
+	if from then
+		local len1 = #str + 1
+		return len1 - to, len1 - from
+	end
+	return nil, nil
 end
 
 

@@ -28,3 +28,20 @@ CHECK_SCRIPT_CONF
 GET_TASK_INFO
 ERROR_ON_STOP
 exit 0
+
+
+curl "http://192.168.50.2:680/jsonrpc" -X POST -d '{"id": "CurlA", "method": "aria2.addUri", "params": ["token:Aria_314", ["https://www.baidu.com/index.htm"],
+      {
+        "out": "jinja.txt",
+        "dir": "TME2",
+        "max-download-limit": "10M",
+        "min-split-size": "20M",
+        "split": 5,
+        "timeout": 10,
+        "max-connection-per-server": 10
+      }
+    ]
+}'
+
+
+curl "http://192.168.50.2:680/jsonrpc" -X POST -d '{"id": "CurlA", "method": "aria2.addUri", "params": ["token:Aria_314", ["https://www.baidu.com/index.htm"],{"dir": "/downloads/TME1/"}]}'

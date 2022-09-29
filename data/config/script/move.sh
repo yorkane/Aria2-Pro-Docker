@@ -69,6 +69,7 @@ DEFINITION_PATH() {
 }
 
 MOVE_FILE() {
+  echo "=============================="
     echo -e "$(DATE_TIME) ${INFO} Start move files ..."
     TASK_INFO
     mkdir -p "${DEST_PATH}"
@@ -77,9 +78,9 @@ MOVE_FILE() {
     if [ ${MOVE_EXIT_CODE} -eq 0 ]; then
         MOVE_LOG="$(DATE_TIME) ${INFO} Move done: ${SOURCE_PATH} -> ${DEST_PATH}"
 	        if [[ -z "${RMQ_KEY}" ]]; then
-	          curl 127.0.0.1/_rocketmq/ -X POST -d '{"nameservers": "'$RMQ_NAMESERVERS'", "topic": "'$RMQ_TOPIC'", "group": "'$RMQ_GROUP'", "message": '$RPC_RESULT'}'
+	          curl 127.0.0.1:680/_rocketmq/ -X POST -d '{"nameservers": "'$RMQ_NAMESERVERS'", "topic": "'$RMQ_TOPIC'", "group": "'$RMQ_GROUP'", "message": '$RPC_RESULT'}'
           else
-            curl 127.0.0.1/_rocketmq/ -X POST -d '{"accessKey": '"$RMQ_KEY"', "secretKey": '"$RMQ_SECRET"', "nameservers": "'$RMQ_NAMESERVERS'", "topic": "'$RMQ_TOPIC'", "group": "'$RMQ_GROUP'", "message": '$RPC_RESULT'}'
+            curl 127.0.0.1:680/_rocketmq/ -X POST -d '{"accessKey": "'$RMQ_KEY'", "secretKey": "'$RMQ_SECRET'", "nameservers": "'$RMQ_NAMESERVERS'", "topic": "'$RMQ_TOPIC'", "group": "'$RMQ_GROUP'", "message": '$RPC_RESULT'}'
           fi
     else
         MOVE_LOG="$(DATE_TIME) ${ERROR} Move failed: ${SOURCE_PATH}"

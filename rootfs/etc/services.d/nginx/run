@@ -1,0 +1,7 @@
+#!/usr/bin/with-contenv bash
+
+echo "Starting openresty"
+#exec echo "Starting openresty!!"
+exec s6-setuidgid p3terx nginx -g "daemon off;";
+
+#nginx -g "daemon off;"

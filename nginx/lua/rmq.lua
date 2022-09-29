@@ -3,7 +3,9 @@ local producer = require "resty.rocketmq.producer"
 local consumer = require "resty.rocketmq.consumer"
 local split = require('ngx.re').split
 local http = require('lib.resty.http')
-local dump, logs, dump_class,dump_lua,dump_dict = require('klib.dump').locally()
+local dump, logs, dump_class, dump_lua, dump_dict = require('klib.dump').locally()
+---@type ngx.shared.DICT
+local config = ngx.shared["config"]
 
 local _M = {
 
@@ -67,11 +69,13 @@ function _M.handle()
     if not topic or #topic < 2 then
         return resp('json.topic required at least 2 chars', 500)
     end
+    --logs(obj)
     local message = obj.message
     if not message.result then
         return resp('json.message.result required', 500)
     end
     local result = message.result
+    local errorCode = tonumber(result.errorCode)
     local files = result.files
     if files then
         --ngx.log(ngx.ERROR, cjson.encode(result))
@@ -81,6 +85,9 @@ function _M.handle()
     else
         --ngx.log(ngx.ERROR, cjson.encode(result))
         --return resp('json.message.result.files required', 500)
+    end
+    if errorCode == 3 or errorCode == 4 then
+        config:set('Error:' .. result.uri, 4)
     end
 
     local res, err
